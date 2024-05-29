@@ -2,9 +2,9 @@ name: CD with Gradle
 
 on:
    push:
-     branches: [ "dev-be" ]
+     branches: [ "hotfix/OAuth" ]
    pull_request:
-     branches: [ "dev-be" ]
+     branches: [ "hotfix/OAuth" ]
 
 permissions:
   contents: read  # 이 설정은 워크플로우가 리포지토리의 콘텐츠를 읽을 수 있도록 허용합니다.
