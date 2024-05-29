@@ -7,6 +7,7 @@ import codesquad.issuetracker.user.dto.SimpleUserResponse;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,8 @@ public class OAuthController {
 
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
-        response.sendRedirect(oAuthService.getAuthorizationUrl());
+        String authorizationUrl = oAuthService.getAuthorizationUrl();
+        response.sendRedirect("/google-oauth?url=" + URLEncoder.encode(authorizationUrl, "UTF-8"));
     }
 
     @GetMapping("/callback")
