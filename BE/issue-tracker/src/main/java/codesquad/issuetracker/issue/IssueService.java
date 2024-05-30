@@ -45,9 +45,16 @@ public class IssueService {
 
     public IssueListResponse findIssuesByState(State state) {
         List<Issue> issues = issueRepository.findAllByState(state);
-        return IssueListResponse.of(issues.stream().map(issue -> IssueResponse.of(issue, findLabelByIssueId(issue.getId()),
-                milestoneService.findById(issue.getMilestoneId()))).toList(), countService.fetchLabelMilestoneCount(),
+        List<IssueResponse> issueResponses = issues.stream()
+            .map(this::convertToResponse).toList();
+        return IssueListResponse.of(issueResponses, countService.fetchLabelMilestoneCount(),
             countService.fetchIssueCount());
+    }
+
+    private IssueResponse convertToResponse(Issue issue) {
+        Long milestoneId = issue.getMilestoneId().orElse(null);
+        Milestone milestone = (milestoneId == null) ? Milestone.builder().build() : milestoneService.findById(milestoneId);
+        return IssueResponse.of(issue, findLabelByIssueId(issue.getId()), milestone);
     }
 
     public Issue create(IssueCreateRequest issueCreateRequest) {
@@ -61,7 +68,9 @@ public class IssueService {
         List<String> assignees = issue.getAssigneeIds().stream().map(Assignee::getAssigneeId).toList();
         List<SimpleUserResponse> assigneeResponses = userService.getSimpleUsersByAssignee(assignees);
         List<CommentResponse> comments = getCommentResponses(issue.getComments());
-        SimpleMilestoneResponse milestoneResponse = getSimpleMilestone(issue.getMilestoneId());
+        Optional<Long> milestoneId = issue.getMilestoneId();
+        SimpleMilestoneResponse milestoneResponse = milestoneId.map(this::getSimpleMilestone)
+            .orElse(null);
 
         return DetailIssueResponse.of(issue, labels, assigneeResponses, comments, milestoneResponse);
     }
@@ -74,8 +83,8 @@ public class IssueService {
         return comments.stream().map(CommentResponse::of).toList();
     }
 
-    private SimpleMilestoneResponse getSimpleMilestone(Long milestoneId) {
-        Milestone milestone = milestoneService.findById(milestoneId);
+    private SimpleMilestoneResponse getSimpleMilestone(Long id) {
+        Milestone milestone = milestoneService.findById(id);
         return SimpleMilestoneResponse.of(milestone, countService.fetchIssueCount());
     }
 
