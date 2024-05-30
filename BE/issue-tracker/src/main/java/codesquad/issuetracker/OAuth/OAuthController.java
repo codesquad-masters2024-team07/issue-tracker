@@ -47,8 +47,8 @@ public class OAuthController {
         }
     }
 
-    @GetMapping
-    public SimpleUserResponse login(String token) {
+    @GetMapping("/users")
+    public SimpleUserResponse getUser(String token) {
         Claims claims = jwtTokenProvider.extractAllClaims(token);
         String userId = (String) claims.get("userId");
         String imgUrl = (String) claims.get("userImg");
