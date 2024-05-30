@@ -18,7 +18,6 @@ import codesquad.issuetracker.milestone.MilestoneService;
 import codesquad.issuetracker.milestone.dto.SimpleMilestoneResponse;
 import codesquad.issuetracker.user.UserService;
 import codesquad.issuetracker.user.dto.SimpleUserResponse;
-import codesquad.issuetracker.user.dto.UserResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -26,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +42,7 @@ public class IssueService {
     public IssueListResponse findIssuesByState(State state) {
         List<Issue> issues = issueRepository.findAllByState(state);
         return IssueListResponse.of(issues.stream().map(issue -> IssueResponse.of(issue, findLabelByIssueId(issue.getId()),
-                milestoneService.findById(issue.getMilestoneId().getId()))).toList(), countService.fetchLabelMilestoneCount(),
+                milestoneService.findById(issue.getMilestoneId()))).toList(), countService.fetchLabelMilestoneCount(),
             countService.fetchIssueCount());
     }
 
@@ -68,17 +66,12 @@ public class IssueService {
         return labelRefs.stream().map(labelRef -> labelService.findById(labelRef.getLabelId())).collect(Collectors.toSet());
     }
 
-    private Set<UserResponse> getUserResponses(Set<Assignee> assignees) {
-        return assignees.stream().map(assignee -> userService.findById(assignee.getAssigneeId())).map(UserResponse::of)
-            .collect(Collectors.toSet());
-    }
-
     private static List<CommentResponse> getCommentResponses(List<Comment> comments) {
         return comments.stream().map(CommentResponse::of).toList();
     }
 
-    private SimpleMilestoneResponse getSimpleMilestone(AggregateReference<Milestone, Long> milestoneId) {
-        Milestone milestone = milestoneService.findById(milestoneId.getId());
+    private SimpleMilestoneResponse getSimpleMilestone(Long milestoneId) {
+        Milestone milestone = milestoneService.findById(milestoneId);
         return SimpleMilestoneResponse.of(milestone, countService.fetchIssueCount());
     }
 
