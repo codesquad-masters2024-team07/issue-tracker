@@ -12,6 +12,7 @@ import codesquad.issuetracker.issue.dto.IssueCreateRequest;
 import codesquad.issuetracker.issue.dto.IssueListResponse;
 import codesquad.issuetracker.issue.dto.IssueResponse;
 import codesquad.issuetracker.issue.dto.IssueTitleRequest;
+import codesquad.issuetracker.issue.dto.IssuesStateChangeRequest;
 import codesquad.issuetracker.issue.dto.MilestoneUpdateRequest;
 import codesquad.issuetracker.label.Label;
 import codesquad.issuetracker.label.LabelService;
@@ -126,5 +127,16 @@ public class IssueService {
         Issue issue = findById(issueId);
         issue.updateMilestone(request.getMilestoneId());
         issueRepository.save(issue);
+    }
+
+    public void updateIssuesState(IssuesStateChangeRequest request) {
+        log.info("request = {}", request);
+        List<Issue> issues = request.issueIds().stream()
+            .map(this::findById)
+            .peek(issue -> issue.changeState(request.state()))
+            .toList();
+
+        log.info("issues = {}", issues);
+        issueRepository.saveAll(issues);
     }
 }

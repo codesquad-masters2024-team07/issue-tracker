@@ -9,6 +9,7 @@ import codesquad.issuetracker.issue.dto.DetailIssueResponse;
 import codesquad.issuetracker.issue.dto.IssueCreateRequest;
 import codesquad.issuetracker.issue.dto.IssueListResponse;
 import codesquad.issuetracker.issue.dto.IssueTitleRequest;
+import codesquad.issuetracker.issue.dto.IssuesStateChangeRequest;
 import codesquad.issuetracker.issue.dto.MilestoneUpdateRequest;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -89,4 +90,11 @@ public class IssueController {
         issueService.updateMilestone(issueId, request);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateIssuesState(@RequestBody IssuesStateChangeRequest request) {
+        issueService.updateIssuesState(request);
+        return ResponseEntity.noContent().build();
+    }
+
 }
