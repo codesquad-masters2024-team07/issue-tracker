@@ -67,7 +67,8 @@ public class Issue {
     }
 
     public static Issue of(String authorId, String title, String content,
-        AggregateReference<Milestone, Long> milestoneId, Set<IssueAttachedLabel> labelRefs, Set<Assignee> assignees) {
+        AggregateReference<Milestone, Long> milestoneId, Set<IssueAttachedLabel> labelRefs,
+        Set<Assignee> assignees) {
         return Issue.builder()
             .authorId(authorId)
             .title(title)
@@ -93,10 +94,9 @@ public class Issue {
         comments.forEach(Comment::delete);
     }
 
-    public Long getMilestoneId() {
+    public Optional<Long> getMilestoneId() {
         return Optional.ofNullable(milestoneId)
-            .map(AggregateReference::getId)
-            .orElse(null);
+            .map(AggregateReference::getId);
     }
 
     public void updateLabels(List<Long> labels) {
@@ -112,7 +112,7 @@ public class Issue {
     }
 
     public void updateMilestone(Long milestoneId) {
-        this.milestoneId = AggregateReference.to(milestoneId);
+        this.milestoneId = milestoneId == null ? null : AggregateReference.to(milestoneId);
     }
 
     public void changeState(State state) {
