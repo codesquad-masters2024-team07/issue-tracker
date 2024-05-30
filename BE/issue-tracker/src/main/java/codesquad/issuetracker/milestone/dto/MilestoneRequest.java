@@ -17,7 +17,7 @@ public class MilestoneRequest {
         return Milestone.builder()
             .title(title)
             .description(description)
-            .dueDate(dueDate.atStartOfDay())
+            .dueDate(dueDate)
             .updatedAt(LocalDateTime.now())
             .state(State.OPEN)
             .build();

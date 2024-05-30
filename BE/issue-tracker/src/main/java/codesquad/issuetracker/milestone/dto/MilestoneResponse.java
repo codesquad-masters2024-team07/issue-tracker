@@ -2,6 +2,7 @@ package codesquad.issuetracker.milestone.dto;
 
 import codesquad.issuetracker.count.dto.IssueCountByMilestone;
 import codesquad.issuetracker.milestone.Milestone;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
@@ -13,7 +14,7 @@ public class MilestoneResponse {
     Long id;
     String title;
     String description;
-    LocalDateTime dueDate;
+    LocalDate dueDate;
     String state;
     LocalDateTime updatedAt;
     int openIssueCount;

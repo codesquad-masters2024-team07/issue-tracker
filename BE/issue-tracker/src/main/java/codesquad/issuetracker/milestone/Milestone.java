@@ -1,6 +1,7 @@
 package codesquad.issuetracker.milestone;
 
 import codesquad.issuetracker.base.State;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class Milestone {
     private Long id;
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private State state;
     private boolean isDeleted;
     private LocalDateTime updatedAt;
@@ -24,7 +25,7 @@ public class Milestone {
 
     @Builder
     @PersistenceCreator
-    public Milestone(Long id, String title, String description, LocalDateTime dueDate,
+    public Milestone(Long id, String title, String description, LocalDate dueDate,
         State state,
         boolean isDeleted, LocalDateTime updatedAt) {
         this.id = id;
