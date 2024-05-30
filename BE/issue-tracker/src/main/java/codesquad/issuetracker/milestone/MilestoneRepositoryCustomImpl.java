@@ -25,7 +25,7 @@ public class MilestoneRepositoryCustomImpl implements MilestoneRepositoryCustom 
         .id(rs.getLong("id"))
         .title(rs.getString("title"))
         .description(rs.getString("description"))
-        .dueDate(rs.getTimestamp("due_date").toLocalDateTime())
+        .dueDate(rs.getTimestamp("due_date").toLocalDateTime().toLocalDate())
         .state(State.valueOf(rs.getString("state")))
         .isDeleted(rs.getBoolean("is_deleted"))
         .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
