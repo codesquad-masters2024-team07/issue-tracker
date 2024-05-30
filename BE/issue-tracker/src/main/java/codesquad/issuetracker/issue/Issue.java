@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -99,5 +100,21 @@ public class Issue {
         return Optional.ofNullable(milestoneId)
             .map(AggregateReference::getId)
             .orElse(null);
+    }
+
+    public void updateLabels(List<Long> labels) {
+        labelRefs = labels.stream()
+            .map(IssueAttachedLabel::new)
+            .collect(Collectors.toSet());
+    }
+
+    public void updateAssignees(List<String> assignees) {
+        assigneeIds = assignees.stream()
+            .map(Assignee::new)
+            .collect(Collectors.toSet());
+    }
+
+    public void updateMilestone(Long milestoneId) {
+        this.milestoneId = AggregateReference.to(milestoneId);
     }
 }

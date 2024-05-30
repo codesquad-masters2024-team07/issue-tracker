@@ -3,16 +3,20 @@ package codesquad.issuetracker.issue;
 import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.comment.Comment;
 import codesquad.issuetracker.comment.CommentCreateRequest;
+import codesquad.issuetracker.issue.dto.AssigneeUpdateRequest;
+import codesquad.issuetracker.issue.dto.AttachedLabelUpdateRequest;
 import codesquad.issuetracker.issue.dto.DetailIssueResponse;
 import codesquad.issuetracker.issue.dto.IssueCreateRequest;
 import codesquad.issuetracker.issue.dto.IssueListResponse;
 import codesquad.issuetracker.issue.dto.IssueTitleRequest;
+import codesquad.issuetracker.issue.dto.MilestoneUpdateRequest;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,6 +66,27 @@ public class IssueController {
     @DeleteMapping("/{issueId}")
     public ResponseEntity<?> deleteIssue(@PathVariable Long issueId) {
         issueService.delete(issueId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{issueId}/labels")
+    public ResponseEntity<?> updateLabels(@PathVariable Long issueId,
+        @RequestBody AttachedLabelUpdateRequest request) {
+        issueService.updateLabels(issueId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{issueId}/assignees")
+    public ResponseEntity<?> updateAssignees(@PathVariable Long issueId,
+        @RequestBody AssigneeUpdateRequest request) {
+        issueService.updateAssignees(issueId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{issueId}/milestone")
+    public ResponseEntity<?> updateMilestone(@PathVariable Long issueId,
+        @RequestBody MilestoneUpdateRequest request) {
+        issueService.updateMilestone(issueId, request);
         return ResponseEntity.noContent().build();
     }
 }
