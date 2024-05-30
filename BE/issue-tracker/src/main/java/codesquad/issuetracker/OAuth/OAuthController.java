@@ -1,6 +1,7 @@
 package codesquad.issuetracker.OAuth;
 
 import codesquad.issuetracker.exception.UnauthorizedException;
+import codesquad.issuetracker.user.User;
 import codesquad.issuetracker.user.auth.JwtTokenProvider;
 import codesquad.issuetracker.user.dto.LoginResponse;
 import codesquad.issuetracker.user.dto.SimpleUserResponse;
@@ -39,7 +40,11 @@ public class OAuthController {
         try {
             OAuth2AccessToken accessToken = oAuthService.getAccessToken(code);
             SimpleUserResponse userResponse = oAuthService.getUserProfile(accessToken);
-            String token = jwtTokenProvider.createAccessToken(userResponse);
+            User user = User.builder()
+                .id(userResponse.id())
+                .imgUrl(userResponse.imgUrl())
+                .build();
+            String token = jwtTokenProvider.createAccessToken(user);
             response.sendRedirect("/?token=" + token);
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
