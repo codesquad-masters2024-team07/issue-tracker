@@ -29,7 +29,8 @@ public class UserService {
     public String login(UserLoginRequest userLoginRequest) {
         verifyUserExists(userLoginRequest.getId());
         verifyPassword(userLoginRequest.getId(), userLoginRequest.getPassword());
-        return jwtTokenProvider.createAccessToken(userLoginRequest.getId());
+        User user = findById(userLoginRequest.getId());
+        return jwtTokenProvider.createAccessToken(user);
     }
 
     public User findById(String userId) {
