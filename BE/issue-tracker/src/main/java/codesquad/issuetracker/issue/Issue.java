@@ -13,8 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
@@ -26,7 +24,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("ISSUE")
 public class Issue {
 
-    private static final Logger log = LoggerFactory.getLogger(Issue.class);
     @Id
     private Long id;
     private String authorId;

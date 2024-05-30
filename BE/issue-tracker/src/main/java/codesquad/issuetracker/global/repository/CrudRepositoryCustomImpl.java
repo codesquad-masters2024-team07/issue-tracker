@@ -28,6 +28,9 @@ public class CrudRepositoryCustomImpl<T, ID> implements CrudRepositoryCustom<T, 
 
             for (Field field : fields) {
                 field.setAccessible(true);
+                if ("log".equals(field.getName())) {
+                    continue;
+                }
                 Object value = field.get(entity);
                 if (value != null) {
                     if (field.getType().isEnum()) {
