@@ -5,11 +5,14 @@ import codesquad.issuetracker.comment.Comment;
 import codesquad.issuetracker.comment.CommentCreateRequest;
 import codesquad.issuetracker.comment.CommentResponse;
 import codesquad.issuetracker.count.service.CountService;
+import codesquad.issuetracker.issue.dto.AssigneeUpdateRequest;
+import codesquad.issuetracker.issue.dto.AttachedLabelUpdateRequest;
 import codesquad.issuetracker.issue.dto.DetailIssueResponse;
 import codesquad.issuetracker.issue.dto.IssueCreateRequest;
 import codesquad.issuetracker.issue.dto.IssueListResponse;
 import codesquad.issuetracker.issue.dto.IssueResponse;
 import codesquad.issuetracker.issue.dto.IssueTitleRequest;
+import codesquad.issuetracker.issue.dto.MilestoneUpdateRequest;
 import codesquad.issuetracker.label.Label;
 import codesquad.issuetracker.label.LabelService;
 import codesquad.issuetracker.label.dto.SimpleLabelResponse;
@@ -104,5 +107,24 @@ public class IssueService {
         Issue issue = findById(issueId);
         return issue.getLabelRefs().stream().map(IssueAttachedLabel::getLabelId).map(labelService::findById)
             .map(SimpleLabelResponse::from).toList();
+    }
+
+
+    public void updateLabels(Long issueId, AttachedLabelUpdateRequest request) {
+        Issue issue = findById(issueId);
+        issue.updateLabels(request.getLabelIds());
+        issueRepository.save(issue);
+    }
+
+    public void updateAssignees(Long issueId, AssigneeUpdateRequest request) {
+        Issue issue = findById(issueId);
+        issue.updateAssignees(request.getAssigneeIds());
+        issueRepository.save(issue);
+    }
+
+    public void updateMilestone(Long issueId, MilestoneUpdateRequest request) {
+        Issue issue = findById(issueId);
+        issue.updateMilestone(request.getMilestoneId());
+        issueRepository.save(issue);
     }
 }
