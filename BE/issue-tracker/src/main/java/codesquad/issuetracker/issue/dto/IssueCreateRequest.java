@@ -30,7 +30,7 @@ public class IssueCreateRequest {
             .collect(Collectors.toSet());
 
         AggregateReference<Milestone, Long> milestoneId =
-            this.milestoneId == null ? null : AggregateReference.to(this.milestoneId);
+            this.milestoneId == null ? AggregateReference.to(null) : AggregateReference.to(this.milestoneId);
         return Issue.of(userId, title, content, milestoneId, labelRefs, assigneeIds);
     }
 

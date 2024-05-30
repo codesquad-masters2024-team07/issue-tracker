@@ -7,10 +7,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
@@ -22,6 +26,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("ISSUE")
 public class Issue {
 
+    private static final Logger log = LoggerFactory.getLogger(Issue.class);
     @Id
     private Long id;
     private String authorId;
@@ -30,6 +35,7 @@ public class Issue {
     private LocalDateTime openAt;
     private LocalDateTime updatedAt;
     private LocalDateTime closedAt;
+    @Getter(AccessLevel.NONE)
     private AggregateReference<Milestone, Long> milestoneId;
     private State state;
     private boolean isDeleted;
@@ -84,12 +90,14 @@ public class Issue {
         comments.add(comment);
     }
 
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-
     public void delete() {
         this.isDeleted = true;
         comments.forEach(Comment::delete);
+    }
+
+    public Long getMilestoneId() {
+        return Optional.ofNullable(milestoneId)
+            .map(AggregateReference::getId)
+            .orElse(null);
     }
 }

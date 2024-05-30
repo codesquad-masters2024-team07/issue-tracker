@@ -35,7 +35,7 @@ public class MilestoneService {
 
     public Milestone findById(Long id) {
         Optional<Milestone> optionalMilestone = milestoneRepository.findById(id);
-        return optionalMilestone.orElseThrow(IllegalAccessError::new);
+        return optionalMilestone.orElseGet(() -> Milestone.builder().build());
 
     }
 
