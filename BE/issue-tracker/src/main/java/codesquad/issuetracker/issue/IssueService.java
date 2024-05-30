@@ -99,7 +99,7 @@ public class IssueService {
 
 
     public Comment addComment(Long issueId, CommentCreateRequest commentCreateRequest) {
-        Comment comment = Comment.of(commentCreateRequest);
+        Comment comment = commentCreateRequest.toEntity();
         Optional<Issue> optionalIssue = issueRepository.findById(issueId);
         Issue issue = optionalIssue.orElseThrow(NoSuchElementException::new);
         issue.addComment(comment);

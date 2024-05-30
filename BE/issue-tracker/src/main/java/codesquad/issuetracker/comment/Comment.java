@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,6 +27,7 @@ public class Comment {
     private boolean isDeleted;
 
     @Builder
+    @PersistenceCreator
     public Comment(Long id,
         AggregateReference<User, String> authorId, String contents, LocalDateTime createdAt,
         LocalDateTime updatedAt, boolean isDeleted) {
@@ -37,14 +39,9 @@ public class Comment {
         this.isDeleted = isDeleted;
     }
 
-    public static Comment of(CommentCreateRequest commentCreateRequest) {
-        return Comment.builder()
-            .contents(commentCreateRequest.contents())
-            .authorId(AggregateReference.to(commentCreateRequest.authorId()))
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .isDeleted(false)
-            .build();
+    public void updateContent(String content) {
+        this.contents = content;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void delete() {
