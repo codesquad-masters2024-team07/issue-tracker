@@ -1,6 +1,7 @@
 package codesquad.issuetracker.user.auth;
 
 import codesquad.issuetracker.exception.TokenExpiredException;
+import codesquad.issuetracker.user.dto.SimpleUserResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -23,11 +24,13 @@ public class JwtTokenProvider {
         accessExpiration = 3600000L;
     }
 
-    public String createAccessToken(String userId) {
+    public String createAccessToken(SimpleUserResponse user) {
         Date date = new Date();
 
         return Jwts.builder()
-            .subject(userId)
+            .subject(user.id())
+            .claim("userId", user.id())
+            .claim("userImg", user.imgUrl())
             .signWith(secretKey)
             .issuedAt(date)
             .expiration(new Date(date.getTime() + accessExpiration))

@@ -5,6 +5,7 @@ import codesquad.issuetracker.user.auth.JwtTokenProvider;
 import codesquad.issuetracker.user.dto.LoginResponse;
 import codesquad.issuetracker.user.dto.SimpleUserResponse;
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -34,16 +35,27 @@ public class OAuthController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<LoginResponse> callback(@RequestParam("code") String code) {
+    public void callback(@RequestParam("code") String code, HttpServletResponse response) {
         try {
             OAuth2AccessToken accessToken = oAuthService.getAccessToken(code);
             SimpleUserResponse userResponse = oAuthService.getUserProfile(accessToken);
-            String token = jwtTokenProvider.createAccessToken(userResponse.id());
-            return ResponseEntity.ok().body(new LoginResponse(token, userResponse));
+            String token = jwtTokenProvider.createAccessToken(userResponse);
+            response.sendRedirect("/?token=" + token);
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
             throw new UnauthorizedException();
         }
+    }
+
+    @GetMapping
+    public SimpleUserResponse login(String token) {
+        Claims claims = jwtTokenProvider.extractAllClaims(token);
+        String userId = (String) claims.get("userId");
+        String imgUrl = (String) claims.get("userImg");
+        return SimpleUserResponse.builder()
+            .id(userId)
+            .imgUrl(imgUrl)
+            .build();
     }
 
 }
