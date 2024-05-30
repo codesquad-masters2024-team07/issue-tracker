@@ -114,4 +114,11 @@ public class Issue {
     public void updateMilestone(Long milestoneId) {
         this.milestoneId = AggregateReference.to(milestoneId);
     }
+
+    public void changeState(State state) {
+        if (state.equals(State.CLOSED)) {
+            closedAt = LocalDateTime.now();
+        }
+        this.state = state;
+    }
 }
