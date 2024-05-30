@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IssueRepository extends CrudRepository<Issue, Long>, CrudRepositoryCustom<Issue, Long> {
 
-    @Query("SELECT * FROM ISSUE WHERE IS_DELETED = FALSE ")
+    @Query("SELECT * FROM ISSUE WHERE STATE = :state AND IS_DELETED = FALSE ")
     List<Issue> findAllByState(State state);
 
     @Override
