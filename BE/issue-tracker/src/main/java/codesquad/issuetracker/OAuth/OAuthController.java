@@ -3,7 +3,6 @@ package codesquad.issuetracker.OAuth;
 import codesquad.issuetracker.exception.UnauthorizedException;
 import codesquad.issuetracker.user.User;
 import codesquad.issuetracker.user.auth.JwtTokenProvider;
-import codesquad.issuetracker.user.dto.LoginResponse;
 import codesquad.issuetracker.user.dto.SimpleUserResponse;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import io.jsonwebtoken.Claims;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +43,7 @@ public class OAuthController {
                 .imgUrl(userResponse.imgUrl())
                 .build();
             String token = jwtTokenProvider.createAccessToken(user);
-            response.sendRedirect("/?token=" + token);
+            response.sendRedirect("http://www.smokingsection.store/?token=" + token);
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
             throw new UnauthorizedException();

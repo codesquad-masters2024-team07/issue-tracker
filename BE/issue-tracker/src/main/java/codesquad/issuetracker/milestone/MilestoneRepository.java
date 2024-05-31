@@ -1,5 +1,6 @@
 package codesquad.issuetracker.milestone;
 
+import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.global.repository.CrudRepositoryCustom;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -11,7 +12,7 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long>, Mi
 
     @Modifying
     @Query("UPDATE MILESTONE m SET m.state = :state WHERE m.id = :id")
-    int updateMilestoneState(@Param("id") Long id, @Param("state") String state);
+    int updateMilestoneState(@Param("id") Long id, @Param("state") State state);
 
     @Query("SELECT COUNT(*) FROM MILESTONE WHERE IS_DELETED = FALSE AND STATE = 'OPEN'")
     int countOpenMilestones();
