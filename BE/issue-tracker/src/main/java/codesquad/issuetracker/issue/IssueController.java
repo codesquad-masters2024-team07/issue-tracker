@@ -1,6 +1,5 @@
 package codesquad.issuetracker.issue;
 
-import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.comment.Comment;
 import codesquad.issuetracker.comment.CommentCreateRequest;
 import codesquad.issuetracker.issue.dto.AssigneeUpdateRequest;
@@ -12,6 +11,7 @@ import codesquad.issuetracker.issue.dto.IssueTitleRequest;
 import codesquad.issuetracker.issue.dto.IssuesStateChangeRequest;
 import codesquad.issuetracker.issue.dto.MilestoneUpdateRequest;
 import java.net.URI;
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +36,8 @@ public class IssueController {
 
 
     @GetMapping
-    public IssueListResponse getIssues(@RequestParam State state) {
-        return issueService.findIssuesByState(state);
+    public IssueListResponse getIssues(@RequestParam(name = "filter", required = false) String filter) throws SQLException {
+        return issueService.findIssues(filter);
     }
 
     @GetMapping("/{issueId}")

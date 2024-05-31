@@ -1,6 +1,5 @@
 package codesquad.issuetracker.issue;
 
-import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.comment.Comment;
 import codesquad.issuetracker.comment.CommentCreateRequest;
 import codesquad.issuetracker.comment.CommentResponse;
@@ -9,6 +8,7 @@ import codesquad.issuetracker.issue.dto.AssigneeUpdateRequest;
 import codesquad.issuetracker.issue.dto.AttachedLabelUpdateRequest;
 import codesquad.issuetracker.issue.dto.DetailIssueResponse;
 import codesquad.issuetracker.issue.dto.IssueCreateRequest;
+import codesquad.issuetracker.issue.dto.IssueFilter;
 import codesquad.issuetracker.issue.dto.IssueListResponse;
 import codesquad.issuetracker.issue.dto.IssueResponse;
 import codesquad.issuetracker.issue.dto.IssueTitleRequest;
@@ -22,6 +22,7 @@ import codesquad.issuetracker.milestone.MilestoneService;
 import codesquad.issuetracker.milestone.dto.SimpleMilestoneResponse;
 import codesquad.issuetracker.user.UserService;
 import codesquad.issuetracker.user.dto.SimpleUserResponse;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -43,9 +44,10 @@ public class IssueService {
     private final CountService countService;
 
 
-    public IssueListResponse findIssuesByState(State state) {
-        List<Issue> issues = issueRepository.findAllByState(state);
-        List<IssueResponse> issueResponses = issues.stream()
+    public IssueListResponse findIssues(String filter) throws SQLException {
+        List<Issue> issues = issueRepository.findAll(IssueFilter.from(filter));
+        List<Issue> filteredIssues = issues.stream().map(issue -> issueRepository.findById(issue.getId()).get()).toList();
+        List<IssueResponse> issueResponses = filteredIssues.stream()
             .map(this::convertToResponse).toList();
         return IssueListResponse.of(issueResponses, countService.fetchLabelMilestoneCount(),
             countService.fetchIssueCount());
