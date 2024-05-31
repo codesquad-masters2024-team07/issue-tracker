@@ -43,8 +43,8 @@ public class MilestoneService {
         milestoneRepository.update(milestoneId, milestoneRequest.toEntity());
     }
 
-    public Milestone closeMilestone(Long milestoneId) {
-        milestoneRepository.updateMilestoneState(milestoneId, State.CLOSED.name());
+    public Milestone closeMilestone(Long milestoneId, State state) {
+        milestoneRepository.updateMilestoneState(milestoneId, state);
         return findById(milestoneId);
     }
 

@@ -1,5 +1,6 @@
 package codesquad.issuetracker.milestone;
 
+import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.milestone.dto.MilestoneListResponse;
 import codesquad.issuetracker.milestone.dto.MilestoneRequest;
 import java.net.URI;
@@ -54,9 +55,10 @@ public class MilestoneController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{milestoneId}/close")
-    public ResponseEntity<Milestone> closeMilestone(@PathVariable Long milestoneId) {
-        Milestone milestone = milestoneService.closeMilestone(milestoneId);
+    @PatchMapping("/{milestoneId}/{state}")
+    public ResponseEntity<Milestone> closeMilestone(@PathVariable Long milestoneId, @PathVariable
+        State state) {
+        Milestone milestone = milestoneService.closeMilestone(milestoneId, state);
         return ResponseEntity.ok(milestone);
     }
 }
