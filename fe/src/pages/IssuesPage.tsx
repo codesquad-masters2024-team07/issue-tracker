@@ -18,10 +18,6 @@ const IssuePage = () => {
         queryKey: ["issues", query],
         queryFn: () => APiUtil.getData(query),
     });
-    // const [filterState] = useContext(FilterContext);
-    // useEffect(() => {
-    //     console.log(11)
-    // }, [filterState]);
     if (isLoading) return <div><Loading /></div>;
     if (error) return <div>{error.message}</div>;
     

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Sidebar from "../common/Sidebar";
 import { Header } from "../common/UtilUI";
 import { Link, useNavigate } from "react-router-dom";
@@ -142,10 +142,6 @@ const NewPage = () => {
         mutate(newData);
         navigate("/issue");
     };
-
-    useEffect(() => {
-        console.log(sideBarItems)
-    }, [sideBarItems])
 
     return (
         <main className="w-[1280px] mx-auto">

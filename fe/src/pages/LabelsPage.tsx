@@ -26,7 +26,3 @@ const LabelsPage = () => {
 };
 
 export default LabelsPage;
-
-// const params = ["is_open=false", "label=BE"];
-
-// const query = params.map(k => encodeURIComponent(k)).join('=&');

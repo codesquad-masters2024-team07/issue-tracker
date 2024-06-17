@@ -10,14 +10,3 @@ const useQueryHook = (issueId: string | undefined, query: string) => {
 };
 
 export default useQueryHook
-
-// const useIssuesQuery = (issueId: string | undefined, query: string) => {
-//     const { data, isLoading } = useQuery({
-//         queryKey: ["issue", issueId],
-//         queryFn: () => APiUtil.getData(query),
-//     });
-
-//     return { data, isLoading };
-// };
-
-// export default useIssuesQuery

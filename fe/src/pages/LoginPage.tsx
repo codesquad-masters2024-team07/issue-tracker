@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APiUtil } from "../common/Utils";
 import { openNotification } from "../common/Utils";
-const OATH = "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?response_type=code&client_id=234268044109-b5892nulutt16qj6t8uam68nd3c4hthu.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fapi%2FOAuth%2Fcallback&scope=email%20profile&service=lso&o2v=2&ddm=0&flowName=GeneralOAuthFlow"
-// const serverURL = import.meta.env.VITE_API_URL;
 export interface LoginForm {
     id: string;
     password: string;
@@ -54,7 +52,7 @@ const LoginPage = () => {
                 >
                     Issue Tracker
                 </Link>
-                <a href={OATH} className="px-10 py-2 font-normal border-solid border-2 text-blue-500 border-blue-500 rounded-xl">
+                <a className="px-10 py-2 font-normal border-solid border-2 text-blue-500 border-blue-500 rounded-xl">
                     Google 계정으로 로그인
                 </a>
                 <div className="p-4">or</div>
