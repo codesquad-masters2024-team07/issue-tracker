@@ -1,5 +1,6 @@
 package codesquad.issuetracker.label;
 
+import codesquad.issuetracker.global.repository.CrudRepositoryCustom;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LabelRepository extends CrudRepository<Label, Long>, LabelCustomRepository {
+public interface LabelRepository extends CrudRepository<Label, Long>, LabelCustomRepository, CrudRepositoryCustom<Label, Long> {
 
     Page<Label> findAll(Pageable pageable);
 
@@ -18,7 +19,7 @@ public interface LabelRepository extends CrudRepository<Label, Long>, LabelCusto
     Optional<Label> findById(Long id);
 
     @Query("SELECT COUNT(*) FROM LABEL WHERE IS_DELETED = FALSE")
-    Long countLabels();
+    int countLabels();
 
     @Modifying
     @Query("UPDATE LABEL SET IS_DELETED = TRUE WHERE ID = :labelId")

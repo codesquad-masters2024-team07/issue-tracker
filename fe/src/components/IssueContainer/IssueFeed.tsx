@@ -5,35 +5,48 @@ import NotFound from "../../common/NotFound";
 
 export interface Issue {
     id: number;
-    author: string;
+    authorId: string;
     title: string;
-    contents: string;
-    created_at: string;
-    updated_at: string;
-    closed_at: string | null;
-    milestone_id: number | null;
-    is_open: boolean;
-    is_deleted: boolean;
+    openAt: string;
+    milestoneTitle: string;
+    assignees: string[]
+    labels: Labels[]
+}
+
+interface Labels {
+    backgroundColor: string;
+    name: string;
+    textColor: string;
+}
+
+interface IssueInfo {
+    issues: Issue[];
+    openIssueCount: number;
+    closedIssueCount: number;
+    labelCount: number;
+    openMilestoneCount: number;
 }
 
 export interface IssueFeedProps {
+    setQuery: React.Dispatch<React.SetStateAction<string>>
     isOpen: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    issueInfo: Issue[];
+    issueInfo: IssueInfo;
     resetFilterUI: boolean;
     setResetFilterUI: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const IssueFeed = ({
+const  IssueFeed = ({
+    setQuery,
     isOpen,
     setOpen,
     issueInfo,
     resetFilterUI,
     setResetFilterUI,
 }: IssueFeedProps) => {
+
     const [checkedItem, setCheckItem] = useState<string[]>([]);
     const [isAllChecked, setIsAllChecked] = useState(false);
-    const isOpenInfo = issueInfo.filter((curInfo) => curInfo.is_open === isOpen);
 
     const checkItemHandler = (id: string, isChecked: boolean) => {
         if (isChecked) {
@@ -41,14 +54,13 @@ const IssueFeed = ({
         } else {
             setCheckItem((prev) => prev.filter((curItem) => id !== curItem));
         }
-        console.log(checkedItem)
     };
 
     const allCheckHandler = () => {
         setIsAllChecked(prev => !prev);
         
         if(!isAllChecked) {
-            setCheckItem(isOpenInfo.map(curIssue => String(curIssue.id)));
+            setCheckItem(issueInfo.issues.map(curIssue => String(curIssue.id)));
         } else {
             setCheckItem([])
         }
@@ -62,26 +74,30 @@ const IssueFeed = ({
     return (
         <section className="w-full border-2 border-gray-300 rounded-xl mt-4">
             <FeedNav
+                setQuery={setQuery}
                 isOpen={isOpen}
                 setOpen={setOpen}
-                issueInfo={issueInfo}
                 resetFilterUI={resetFilterUI}
                 setResetFilterUI={setResetFilterUI}
                 isAllChecked={isAllChecked}
                 allCheckHandler={allCheckHandler}
                 checkedItem={checkedItem}
+                setCheckItem={setCheckItem}
+                setIsAllChecked={setIsAllChecked}
+                openIssueCount={issueInfo.openIssueCount}
+                closedIssueCount={issueInfo.closedIssueCount}
             />
-            {!isOpenInfo.length ? <NotFound/> : isOpenInfo.map((curIssue, idx) => (
+            {!issueInfo.issues.length ? <NotFound/> : issueInfo.issues.map((curIssue, idx) => (
                 <IssueCard
                     key={curIssue.id}
                     curIssue={curIssue}
                     id={curIssue.id}
-                    isLast={isOpenInfo.length - 1 === idx}
+                    isLast={issueInfo.issues.length - 1 === idx}
                     checkItemHandler={checkItemHandler}
                     isAllChecked={isAllChecked}
+                    isOpen={isOpen}
                 />
             ))}
-            
         </section>
     );
 };

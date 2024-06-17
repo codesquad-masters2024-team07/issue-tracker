@@ -2,23 +2,22 @@ package codesquad.issuetracker.milestone.dto;
 
 import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.milestone.Milestone;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
-@Getter
-@AllArgsConstructor
-public class MilestoneCreateRequest {
+@Value
+public class MilestoneRequest {
 
-    private final String title;
-    private final String description;
-    private final LocalDateTime dueDate;
+    String title;
+    String description;
+    LocalDate dueDate;
 
     public Milestone toEntity() {
         return Milestone.builder()
-            .title(this.title)
-            .description(this.description)
-            .dueDate(this.dueDate)
+            .title(title)
+            .description(description)
+            .dueDate(dueDate.atStartOfDay())
             .updatedAt(LocalDateTime.now())
             .state(State.OPEN)
             .build();

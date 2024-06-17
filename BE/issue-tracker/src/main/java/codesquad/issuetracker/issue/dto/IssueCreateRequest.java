@@ -3,10 +3,12 @@ package codesquad.issuetracker.issue.dto;
 import codesquad.issuetracker.issue.Assignee;
 import codesquad.issuetracker.issue.Issue;
 import codesquad.issuetracker.issue.IssueAttachedLabel;
+import codesquad.issuetracker.milestone.Milestone;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Value;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
 @Value
 public class IssueCreateRequest {
@@ -27,6 +29,8 @@ public class IssueCreateRequest {
             .map(Assignee::new)
             .collect(Collectors.toSet());
 
+        AggregateReference<Milestone, Long> milestoneId =
+            this.milestoneId == null ? null : AggregateReference.to(this.milestoneId);
         return Issue.of(userId, title, content, milestoneId, labelRefs, assigneeIds);
     }
 

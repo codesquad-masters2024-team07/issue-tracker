@@ -2,13 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
+html, body {
+    @apply bg-gray-100;
     height: 100%;
     width: 100%;
+    -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+html.dark, body.dark {
+    @apply bg-darkModeBG;
 }
 
 #root {
     height: 100%;
     width: 100%;
+}
+
+button {
+    cursor: pointer !important;
 }

@@ -1,44 +1,48 @@
 import Nav from "../components/IssueContainer/Nav";
 import IssueFeed from "../components/IssueContainer/IssueFeed";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FilterProvider from "../Providers/FilterProvider";
 import { Header } from "../common/UtilUI";
-import { APiUtil } from "../common/APIUtils";
+import { APiUtil } from "../common/Utils";
+import { useQuery } from "@tanstack/react-query";
+import { Loading } from "../common/NotFound";
+
 const IssuePage = () => {
-    const [isOpen, setOpen] = useState<boolean>(true);
-    const [issueInfo, setIssueInfo] = useState([]);
+    const [query, setQuery] = useState("issues?state=OPEN");
+    const [isOpen, setOpen] = useState(true);
     const [resetFilterUI, setResetFilterUI] = useState(false);
 
     const handleResetFilterUI = () => setResetFilterUI(true);
 
-    useEffect(() => {
-        const getLabelList = async () => {
-            const milestoneList = await APiUtil.getData("issues");
-            setIssueInfo(milestoneList);
-        };
-        getLabelList();
-    }, []);
-
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["issues", query],
+        queryFn: () => APiUtil.getData(query),
+    });
+    if (isLoading) return <div><Loading /></div>;
+    if (error) return <div>{error.message}</div>;
+    
     return (
-        <main className="w-1280 mx-auto">
-            <Header/>
-            <FilterProvider>
+        <FilterProvider>
+            <main className="w-[1280px] mx-auto">
+                <Header />
                 <Nav
+                    labelCount={data.labelCount}
+                    openMilestoneCount={data.openMilestoneCount}
                     resetFilterUI={resetFilterUI}
                     setResetFilterUI={setResetFilterUI}
                     handleResetFilterUI={handleResetFilterUI}
                 />
                 <IssueFeed
+                    setQuery={setQuery}
                     isOpen={isOpen}
                     setOpen={setOpen}
-                    issueInfo={issueInfo}
+                    issueInfo={data}
                     resetFilterUI={resetFilterUI}
                     setResetFilterUI={setResetFilterUI}
                 />
-            </FilterProvider>
-        </main>
+            </main>
+        </FilterProvider>
     );
 };
 
 export default IssuePage;
-// 엔터 눌렀을때, 필터 눌렀을때 

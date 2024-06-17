@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Issue } from "./IssueFeed";
 import { Link } from "react-router-dom";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { getDateDifference } from "../../common/Utils";
+import { FlagOutlined } from "@ant-design/icons";
 interface IssueCardProps {
     curIssue: Issue;
     id: number;
     isLast: boolean;
     checkItemHandler: (id: string, isChecked: boolean) => void;
     isAllChecked: boolean;
+    isOpen: boolean
 }
 
-const IssueCard = ({ curIssue, id, isLast, checkItemHandler, isAllChecked }: IssueCardProps) => {
+const IssueCard = ({ curIssue, id, isLast, checkItemHandler, isAllChecked, isOpen }: IssueCardProps) => {
     const [isChecked, setChecked] = useState(false);
     
     const checkItemHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,11 +23,7 @@ const IssueCard = ({ curIssue, id, isLast, checkItemHandler, isAllChecked }: Iss
     }
 
     useEffect(() => {
-        if(isAllChecked){
-            setChecked(true)
-        } else {
-            setChecked(false)
-        }
+        setChecked(isAllChecked)
     }, [isAllChecked])
 
     return (
@@ -33,19 +32,19 @@ const IssueCard = ({ curIssue, id, isLast, checkItemHandler, isAllChecked }: Iss
                 key={id}
                 className={`${
                     isLast ? "rounded-b-xl" : ""
-                } h-90 flex border-t-2 border-gray-300 dark:bg-darkModeBorderBG`}
+                } h-[90px] flex border-t-2 border-gray-300 dark:bg-darkModeBorderBG`}
             >
-                <div className="flex h-full w-70% items-center">
+                <div className="flex h-full w-[70%] items-center">
                     <input
                         type="checkbox"
                         id={String(id)}
                         checked={isChecked}
-                        onChange={(e) => checkItemHandle(e)}
-                        className="w-7%"
+                        onChange={checkItemHandle}
+                        className="w-[7%]"
                     />
                     <Link
                         to={`/issue/${id}`}
-                        state={curIssue}
+                        state={isOpen}
                         className="h-4/5"
                     >
                         <div className="w-full h-1/2 flex items-center">
@@ -55,20 +54,30 @@ const IssueCard = ({ curIssue, id, isLast, checkItemHandler, isAllChecked }: Iss
                                     {curIssue.title}
                                 </div>
                             </div>
-                            <div className="border-2 border-gray-300 px-2 rounded-2xl font-extralight text-sm">
-                                Label
-                            </div>
+                            {curIssue.labels.map((curLabel, idx) => (
+                                <div key={idx} style={{
+                                    backgroundColor: curLabel.backgroundColor,
+                                    color: curLabel.textColor,
+                                }}
+                                className="px-2 rounded-2xl font-extralight text-sm mx-2">
+                                    {curLabel.name}
+                                </div>
+                            ))}
+                            
                         </div>
                         <div className="w-full h-1/2 flex items-center">
                             <div className="mr-2">#{curIssue.id}</div>
-                            <div className="w-full">
-                                이 이슈가 {curIssue.created_at}에,{" "}
-                                {curIssue.author}님에 의해 작성되었습니다.
+                            <div className="mr-4">
+                                이 이슈가 {getDateDifference(curIssue.openAt)},{" "}
+                                {curIssue.authorId}님에 의해 작성되었습니다.
+                            </div>
+                            <div>
+                            <FlagOutlined /> {curIssue.milestoneTitle}
                             </div>
                         </div>
                     </Link>
                 </div>
-                <div className="flex h-full w-30% items-center">
+                <div className="flex h-full w-[30%] items-center">
                     <div className="flex-grow"></div>
                 </div>
             </div>

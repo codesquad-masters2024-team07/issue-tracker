@@ -1,6 +1,10 @@
 package codesquad.issuetracker.label;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface LabelCustomRepository<T> {
 
-    void update(Long id, T model);
+    Page<Label> findAll(Pageable pageable);
+
 }

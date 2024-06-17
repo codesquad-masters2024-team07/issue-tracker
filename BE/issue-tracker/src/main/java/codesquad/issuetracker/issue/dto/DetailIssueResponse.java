@@ -1,10 +1,10 @@
 package codesquad.issuetracker.issue.dto;
 
-import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.comment.CommentResponse;
 import codesquad.issuetracker.issue.Issue;
 import codesquad.issuetracker.label.Label;
-import codesquad.issuetracker.user.dto.UserResponse;
+import codesquad.issuetracker.milestone.dto.SimpleMilestoneResponse;
+import codesquad.issuetracker.user.dto.SimpleUserResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -23,15 +23,14 @@ public class DetailIssueResponse {
     String content;
     LocalDateTime openAt;
     LocalDateTime updatedAt;
-    LocalDateTime closedAt;
-    Long milestoneId;
-    State state;
-    boolean isDeleted;
+    SimpleMilestoneResponse milestone;
     Set<Label> labels;
-    Set<UserResponse> assignees;
+    List<SimpleUserResponse> assignees;
     List<CommentResponse> comments;
+    int commentCount;
 
-    public static DetailIssueResponse of(Issue issue, Set<Label> labels, Set<UserResponse> assignees, List<CommentResponse> comments) {
+    public static DetailIssueResponse of(Issue issue, Set<Label> labels, List<SimpleUserResponse> assignees,
+        List<CommentResponse> comments, SimpleMilestoneResponse milestoneResponse) {
         return DetailIssueResponse.builder()
             .id(issue.getId())
             .authorId(issue.getAuthorId())
@@ -39,13 +38,11 @@ public class DetailIssueResponse {
             .content(issue.getContent())
             .openAt(issue.getOpenAt())
             .updatedAt(issue.getUpdatedAt())
-            .closedAt(issue.getClosedAt())
-            .milestoneId(issue.getMilestoneId().getId())
-            .state(issue.getState())
-            .isDeleted(issue.isDeleted())
+            .milestone(milestoneResponse)
             .labels(labels)
             .assignees(assignees)
             .comments(comments)
+            .commentCount(comments.size())
             .build();
     }
 

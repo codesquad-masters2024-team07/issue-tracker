@@ -1,21 +1,22 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import LabelsAndMilestoneUI from "../../common/UtilUI";
 import { PlusOutlined } from "@ant-design/icons";
 import { ModifyDeleteContext } from "../../Providers/ModifyDeleteProvider";
 
 interface NavProps {
-    location: string
+    location: string;
+    labelsCount?: number;
+    milestoneCount?: number;
+
 }
 
-const Nav = ({location}: NavProps) => {
+const Nav = ({location, labelsCount, milestoneCount}: NavProps) => {
 
-    const [ModifyDeleteState, ModifyDeleteDispatch] = useContext(ModifyDeleteContext)
-    useEffect(() => {
-        console.log(ModifyDeleteState)
-    })
+    const [, ModifyDeleteDispatch] = useContext(ModifyDeleteContext)
+    
     return (
         <div className="flex justify-between">
-            <LabelsAndMilestoneUI />
+            <LabelsAndMilestoneUI labelsCount={labelsCount} milestoneCount={milestoneCount}/>
             <button
                 className="flex items-center border-none bg-blue-500 px-6 rounded-xl text-white text-xs w-[128px] justify-center"
                 onClick={() => ModifyDeleteDispatch({type: "SET_CREATE", Payload: "create"})}

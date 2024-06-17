@@ -63,7 +63,7 @@ public class Issue {
     }
 
     public static Issue of(String authorId, String title, String content,
-        Long milestoneId, Set<IssueAttachedLabel> labelRefs, Set<Assignee> assignees) {
+        AggregateReference<Milestone, Long> milestoneId, Set<IssueAttachedLabel> labelRefs, Set<Assignee> assignees) {
         return Issue.builder()
             .authorId(authorId)
             .title(title)
@@ -71,7 +71,7 @@ public class Issue {
             .openAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
             .closedAt(LocalDateTime.now())
-            .milestoneId(AggregateReference.to(milestoneId))
+            .milestoneId(milestoneId)
             .state(State.OPEN)
             .isDeleted(false)
             .labelRefs(labelRefs)

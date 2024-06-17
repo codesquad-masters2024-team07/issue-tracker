@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,16 +37,18 @@ class LabelServiceTest {
             .name("테스트 라벨")
             .description("테스트 내용")
             .backgroundColor("#FF0000")
+            .isDeleted(false)
             .build();
 
         Label label2 = Label.builder()
             .name("테스트 라벨2")
             .description("테스트 내용2")
             .backgroundColor("#DC143C")
+            .isDeleted(false)
             .build();
 
         when(labelRepository.findAll()).thenReturn(
-            List.of(label1, label2));
+            new PageImpl<>(List.of(label1, label2)));
 
         List<Label> fetchedAllLabels = labelService.fetchFilteredLabels(any(Pageable.class));
         assertThat(fetchedAllLabels).containsExactly(label1, label2);

@@ -3,18 +3,19 @@ package codesquad.issuetracker.issue;
 import codesquad.issuetracker.base.State;
 import codesquad.issuetracker.comment.Comment;
 import codesquad.issuetracker.comment.CommentCreateRequest;
-import codesquad.issuetracker.comment.CommentService;
 import codesquad.issuetracker.issue.dto.DetailIssueResponse;
 import codesquad.issuetracker.issue.dto.IssueCreateRequest;
+import codesquad.issuetracker.issue.dto.IssueListResponse;
+import codesquad.issuetracker.issue.dto.IssueTitleRequest;
 import java.net.URI;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,19 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/issues")
 public class IssueController {
 
-    IssueService issueService;
-    CommentService commentService;
+    private final IssueService issueService;
 
-    public IssueController(IssueService issueService, CommentService commentService) {
-        this.issueService = issueService;
-        this.commentService = commentService;
-    }
 
     @GetMapping
-    public List<Issue> getIssues(@RequestParam State state) {
+    public IssueListResponse getIssues(@RequestParam State state) {
         return issueService.findIssuesByState(state);
     }
 
@@ -55,10 +52,11 @@ public class IssueController {
         return issueService.addComment(issueId, commentCreateRequest);
     }
 
-    @PatchMapping("/{issueId}")
-    public Issue updateIssue(@PathVariable Long issueId, @RequestBody String title) {
-        return issueService.updateTitle(issueId, title);
-
+    @PutMapping("/{issueId}")
+    public ResponseEntity<IssueTitleRequest> updateIssueTitle(@PathVariable Long issueId,
+        @RequestBody IssueTitleRequest issueTitleRequest) {
+        issueService.updateTitle(issueId, issueTitleRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{issueId}")
